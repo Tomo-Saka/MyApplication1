@@ -1,6 +1,7 @@
-package android.lifeistech.com.myapplication1;
+package android.lifeistech.com.myapplication1.adapter;
 
 import android.content.Context;
+import android.lifeistech.com.myapplication1.R;
 import android.lifeistech.com.myapplication1.model.Schedule;
 import android.lifeistech.com.myapplication1.model.Task;
 import android.view.LayoutInflater;

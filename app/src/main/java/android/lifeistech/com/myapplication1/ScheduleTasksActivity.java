@@ -2,20 +2,16 @@ package android.lifeistech.com.myapplication1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.lifeistech.com.myapplication1.adapter.TaskAdapter;
 import android.lifeistech.com.myapplication1.model.Schedule;
 import android.lifeistech.com.myapplication1.model.Task;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.orm.query.Condition;
-import com.orm.query.Select;
 
 import java.util.List;
 

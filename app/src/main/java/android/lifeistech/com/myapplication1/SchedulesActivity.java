@@ -2,19 +2,17 @@ package android.lifeistech.com.myapplication1;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.lifeistech.com.myapplication1.adapter.ScheduleAdapter;
 import android.lifeistech.com.myapplication1.model.Schedule;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.orm.SugarRecord;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,10 +54,7 @@ public class SchedulesActivity extends AppCompatActivity implements DatePickerDi
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Schedule schedule = adapter.getItem(position);
                 //タップ時の処理
-                Intent intent = new Intent(view.getContext(), ScheduleEditActivity.class);
-                intent.putExtra("title", schedule.title);
-                intent.putExtra("date", schedule.date.getTime());
-                intent.putExtra("position", position);
+                Intent intent = ScheduleEditActivity.createIntent(SchedulesActivity.this, schedule);
                 startActivityForResult(intent, REQUESTCODE);
                 return true;
             }
@@ -113,10 +108,9 @@ public class SchedulesActivity extends AppCompatActivity implements DatePickerDi
         switch (requestCode) {
             case REQUESTCODE:
                 if (resultCode == RESULT_OK) {
-                    Schedule schedule = adapter.getItem(data.getIntExtra("position", 0));
-                    schedule.title = data.getStringExtra("title");
-                    schedule.date = new Date(data.getLongExtra("date", new Date().getTime()));
-                    adapter.notifyDataSetChanged();
+                    adapter.clear();
+                    final List<Schedule> schedules = Schedule.listAll(Schedule.class);
+                    adapter.addAll(schedules);
                 }
                 break;
         }
