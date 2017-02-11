@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * スケジュールの一覧画面
  */
 public class SchedulesActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final int REQUESTCODE = 1;
@@ -68,8 +68,9 @@ public class SchedulesActivity extends AppCompatActivity implements DatePickerDi
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Schedule schedule = adapter.getItem(position);
                 //タップ時の処理
-                Intent intent = new Intent(view.getContext(), ScheduleTasksActivity.class);
+                Intent intent = ScheduleTasksActivity.createIntent(SchedulesActivity.this, schedule);
                 startActivity(intent);
             }
         });

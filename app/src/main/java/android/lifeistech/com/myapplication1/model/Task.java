@@ -10,13 +10,17 @@ public class Task extends SugarRecord {
     public String contents;
     public boolean isDone = false;
 
-    public Task(){
+    public Schedule schedule;
+
+    public Task() {
 
     }
 
-    public Task(String title,String contents,boolean isDone){
-        this.title=title;
-        this.contents=contents;
-        this.isDone=isDone;
+    public Task(String title, String contents, Schedule schedule, boolean isDone) {
+        this.title = title;
+        this.contents = contents;
+        this.schedule = schedule;
+        this.isDone = isDone;
     }
+
 }
