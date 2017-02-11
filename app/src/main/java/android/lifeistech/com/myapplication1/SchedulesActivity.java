@@ -8,43 +8,33 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orm.SugarRecord;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  */
-public class SchedulesActivity extends AppCompatActivity {
+public class SchedulesActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final int REQUESTCODE = 1;
+
+    // Views
     ListView listView;
     EditText editText2;
-    ScheduleAdapter adapter;
     TextView textViewDate;
-
+    // Dialog
     DatePickerDialog datePickerDialog;
 
-    // 日付設定時のリスナ作成
-    DatePickerDialog.OnDateSetListener DateSetListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(android.widget.DatePicker datePicker, int year,
-                              int monthOfYear, int dayOfMonth) {
-
-            // トーストとログ出力
-            Log.d("DatePicker", "year:" + year + " monthOfYear:" + monthOfYear
-                    + " dayOfMonth:" + dayOfMonth);
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, monthOfYear, dayOfMonth);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-            Date date = calendar.getTime();
-            textViewDate.setText(format.format(date));
-            textViewDate.setTag(date);
-        }
-    };
+    ScheduleAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +73,21 @@ public class SchedulesActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // データベースに保存されているデータをすべて取得する
+        final List<Schedule> schedules = Schedule.listAll(Schedule.class);
+        adapter.addAll(schedules);
     }
 
-    public void add2(View v) {
+    public void add(View v) {
+        // Scheduleクラスを新しく作成する
         Schedule schedule = new Schedule();
         schedule.title = editText2.getText().toString();
         schedule.date = (Date) textViewDate.getTag();
+        // 作成した内容をデータベースに保存する
+        schedule.save();
+        // ListViewに追加をする
         adapter.add(schedule);
-
         Toast.makeText(this, schedule.title, Toast.LENGTH_SHORT).show();
     }
 
@@ -103,9 +100,8 @@ public class SchedulesActivity extends AppCompatActivity {
 
         // 日付設定ダイアログの作成・リスナの登録
         datePickerDialog = new DatePickerDialog(this,
-                android.R.style.Theme_Black_NoTitleBar, DateSetListener, year,
-                monthOfYear, dayOfMonth);
-
+                android.R.style.Theme_Black_NoTitleBar, this,
+                year, monthOfYear, dayOfMonth);
         // 日付設定ダイアログの表示
         datePickerDialog.show();
     }
@@ -123,5 +119,19 @@ public class SchedulesActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    // 日付設定時のリスナ作成
+    @Override
+    public void onDateSet(android.widget.DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+        // トーストとログ出力
+        Log.d("DatePicker", "year:" + year + " monthOfYear:" + monthOfYear
+                + " dayOfMonth:" + dayOfMonth);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, monthOfYear, dayOfMonth);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = calendar.getTime();
+        textViewDate.setText(format.format(date));
+        textViewDate.setTag(date);
     }
 }
